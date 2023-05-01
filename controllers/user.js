@@ -11,19 +11,17 @@ const registerUser = async (req, res) => {
     }
     const user = await User.create({ ...req.body });
     const token = await user.createJWT();
-    res
-      .status(StatusCodes.CREATED)
-      .json({
-        user: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          gender: user.gender,
-          image: user.image,
-        },
-        token,
-      });
+    res.status(StatusCodes.CREATED).json({
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        gender: user.gender,
+        image: user.image,
+      },
+      token,
+    });
   } catch (error) {
     res.status(error.statusCode || 500).json({ error: error.message });
   }
@@ -64,32 +62,13 @@ const loginUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, image, gender } = req.body;
-    if (!firstName || !lastName || !email || !phoneNumber || !image || !gender) {
-    return  res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ msg: "Please provide all values" });
-    }
-    const user = await User.findOne({ _id: req.user.userId });
-    user.email = email;
-    user.firstName = firstName;
-    user.lastName = lastName;
-    user.phoneNumber = phoneNumber;
-    user.gender = gender;
-    user.image = image;
-
-    await user.save();
-    res.status(StatusCodes.OK).json({
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        gender: user.gender,
-        image: user.image,
-      },
-    });
-  } catch (error) {
+    const user = await User.findOneAndUpdate(
+      { _id: req.user.userId },
+      req.body,
+      { new: true, runValidators: true }
+    );
+   return res.status(StatusCodes.OK).json({ user });
+  } catch (error) { 
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: "Something went wrong" });
