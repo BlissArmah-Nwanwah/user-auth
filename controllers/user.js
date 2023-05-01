@@ -65,7 +65,7 @@ const loginUser = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNumber, image, gender } = req.body;
-    if (!firstName || !lastName || !email || !phoneNumber || !image || gender) {
+    if (!firstName || !lastName || !email || !phoneNumber || !image || !gender) {
       res
         .status(StatusCodes.BAD_REQUEST)
         .json({ msg: "Please provide all values" });
