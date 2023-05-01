@@ -78,17 +78,16 @@ const updateUser = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  console.log(req.user);
   try {
     const user = await User.findById(req.user.userId);
-    const isMatch = await user.comparePassword(req.body.oldPassword);
+    const isMatch = await user.comparePassword(req.body.currentPassword);
     if (!user) {
       return res.status(404).json({ message: "User does not exist" });
     }
     if (!isMatch) {
       return res.status(404).json({ message: "Password doesn't match the old password" });
     }
-    user.password = req.body.password;
+    user.password = req.body.newPassword;
     await user.save();
     res.json({ message: "Password changed successfully" });
   } catch (error) {
