@@ -77,15 +77,16 @@ const updateUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(404).json({ message: "User does not exist" });
-    }
-    user.password = req.body.newPassword;
-    await user.save();
-    res.json({ message: "Password changed successfully" });
-  } catch (error) {
-    res.status(400).json({ error: "wronge password" });
+    const user = await User.findOneAndUpdate(
+      { _id: req.user.userId },
+      req.body,
+      { new: true, runValidators: true }
+    );
+   return res.status(StatusCodes.CREATED).json({ msg:"Password Modified" });
+  } catch (error) { 
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Something went wrong" });
   }
 };
 
