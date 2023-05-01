@@ -28,7 +28,6 @@ const UserSchema = new mongoose.Schema({
   phoneNumber: {
     type:Number,
     maxlength:12,
-    default: 112233445566
   },
   gender: {
     type:String,
