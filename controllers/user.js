@@ -66,7 +66,7 @@ const updateUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNumber, image, gender } = req.body;
     if (!firstName || !lastName || !email || !phoneNumber || !image || !gender) {
-      res
+    return  res
         .status(StatusCodes.BAD_REQUEST)
         .json({ msg: "Please provide all values" });
     }
@@ -79,7 +79,6 @@ const updateUser = async (req, res) => {
     user.image = image;
 
     await user.save();
-    const token = user.createJWT();
     res.status(StatusCodes.OK).json({
       user: {
         firstName: user.firstName,
@@ -89,7 +88,6 @@ const updateUser = async (req, res) => {
         gender: user.gender,
         image: user.image,
       },
-      token,
     });
   } catch (error) {
     return res
@@ -108,7 +106,7 @@ const changePassword = async (req, res) => {
     await user.save();
     res.json({ message: "Password changed successfully" });
   } catch (error) {
-    res.status(400).json({ error: "hi" });
+    res.status(400).json({ error: "wronge password" });
   }
 };
 
