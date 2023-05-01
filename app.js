@@ -2,6 +2,7 @@ const express = require('express')
 const user = require('./routes/user')
 const connectDB = require('./db/connect')
 
+const cors = require('cors')
 
 const app = express()
 
@@ -11,7 +12,7 @@ require('dotenv').config()
 // middleware
 app.use(express.json())
 
-
+app.use(cors())
 
 // routes
 app.get('/hello',(req,res)=>{
