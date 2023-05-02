@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError } = require("../errors");
+const bcrypt = require('bcryptjs');
 
 const registerUser = async (req, res) => {
   const { email } = req.body;
@@ -77,16 +78,18 @@ const updateUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const user = await User.findOneAndUpdate(
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(req.body.password, salt);
+      const user = await User.findOneAndUpdate(
       { _id: req.user.userId },
-      req.body,
+      {password: password},
       { new: true, runValidators: true }
     );
    return res.status(StatusCodes.CREATED).json({ msg:"Password Modified" });
   } catch (error) { 
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: "Something went wrong" });
+      .json({ error: error.message});
   }
 };
 
