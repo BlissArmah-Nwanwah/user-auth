@@ -61,6 +61,7 @@ const loginUser = async (req, res) => {
   }
 };
 
+
 const updateUser = async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
