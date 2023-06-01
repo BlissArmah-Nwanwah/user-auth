@@ -63,10 +63,11 @@ const loginUser = async (req, res) => {
 
 
 const updateUser = async (req, res) => {
+  const {email,...rest} = req.body
   try {
     const user = await User.findOneAndUpdate(
       { _id: req.user.userId },
-      req.body,
+       req.body,
       { new: true, runValidators: true }
     );
    return res.status(StatusCodes.OK).json({ user });
@@ -84,7 +85,7 @@ const changePassword = async (req, res) => {
       const user = await User.findOneAndUpdate(
       { _id: req.user.userId },
       {password: password},
-      { new: true, runValidators: true }
+      { new: true, runValidators: true }  
     );
    return res.status(StatusCodes.CREATED).json({ msg:"Password Modified" });
   } catch (error) { 
