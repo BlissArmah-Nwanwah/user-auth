@@ -63,7 +63,7 @@ app.use("/api/v1/quiz", quizzes);
 
 const PORT = process.env.PORT || 4000;
 
-const start = async () => {
+const start = async () => { 
   try {
     await connectDB(process.env.MONGO_URI);
     server.listen(PORT, console.log(`server is listening on port ${PORT}...`));

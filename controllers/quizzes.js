@@ -29,7 +29,7 @@ const getAllQuizzes = async (req, res) => {
     result = Quiz.find(queryObject).select("-correctAnswer");
   }
   const quiz = await result;
-  if (!quiz) {
+  if (!quiz) { 
     return res
       .status(StatusCodes.NOT_FOUND)
       .json({ msg: `No quiz with  : ${subject}` });
@@ -37,6 +37,17 @@ const getAllQuizzes = async (req, res) => {
   res.status(StatusCodes.OK).json({ quiz });
 };
 
+const getQuizQuestions = async (req, res) => {
+  const { id } = req.params;
+  const quiz = await Quiz.findOne({ _id: id }); 
+  if (!quiz) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ msg: `No quiz with  : ${id}` });
+  }
+  res.status(StatusCodes.OK).json({ quiz });
+}
+   
 const totalMarks = async (req, res) => {
   const { allAnswer } = req.body;
   try {
@@ -57,4 +68,4 @@ const totalMarks = async (req, res) => {
   }
 };
 
-module.exports = { getAllQuizzes, createQuiz, totalMarks };
+module.exports = { getAllQuizzes, createQuiz, totalMarks,getQuizQuestions };
