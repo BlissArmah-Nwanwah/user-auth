@@ -38,12 +38,20 @@ const getAllQuizzes = async (req, res) => {
 };
 
 const getQuizQuestions = async (req, res) => {
-  const { id, page } = req.params;
+  const { id, page } = req.query;
+  const queryObject = {};
+  if (id) {
+    queryObject.id = id;
+  }
+  if (page) {
+    queryObject.page = page;
+  }
+  console.log(page);
   const questionsPerPage = 1; // Number of questions per page
   const currentPage = parseInt(page) || 1;
 
   try {
-    const quiz = await Quiz.findOne({ _id: id });
+    const quiz = await Quiz.findOne({ _id: queryObject.id });
 
     if (!quiz) {
       return res
