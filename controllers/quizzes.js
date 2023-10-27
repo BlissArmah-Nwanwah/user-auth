@@ -38,15 +38,47 @@ const getAllQuizzes = async (req, res) => {
 };
 
 const getQuizQuestions = async (req, res) => {
-  const { id } = req.params;
-  const quiz = await Quiz.findOne({ _id: id }); 
-  if (!quiz) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ msg: `No quiz with  : ${id}` });
+  const { id, page } = req.params;
+  const questionsPerPage = 1; // Number of questions per page
+  const currentPage = parseInt(page) || 1;
+
+  try {
+    const quiz = await Quiz.findOne({ _id: id });
+
+    if (!quiz) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: `No quiz with _id: ${id}` });
+    }
+
+    const totalQuestions = quiz.questions.length;
+    const totalPages = Math.ceil(totalQuestions / questionsPerPage);
+
+    if (currentPage < 1 || currentPage > totalPages) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ msg: `Invalid page number: ${currentPage}` });
+    }
+
+    const startIndex = (currentPage - 1) * questionsPerPage;
+    const endIndex = Math.min(startIndex + questionsPerPage, totalQuestions);
+
+    const questions = quiz.questions.slice(startIndex, endIndex);
+
+    const pagination = {
+      currentPage,
+      prevPage: currentPage > 1 ? currentPage - 1 : null,
+      nextPage: currentPage < totalPages ? currentPage + 1 : null,
+      totalPages,
+    };
+
+    res.status(StatusCodes.OK).json({questions, pagination });
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
   }
-  res.status(StatusCodes.OK).json({ quiz });
-}
+};
+
+
    
 const totalMarks = async (req, res) => {
   const { allAnswer } = req.body;
