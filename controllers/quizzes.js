@@ -38,7 +38,8 @@ const getAllQuizzes = async (req, res) => {
 };
 
 const getQuizQuestions = async (req, res) => {
-  const { id, page } = req.params;
+  const { id } = req.params;
+  const {page} = req.query
   const questionsPerPage = 1; // Number of questions per page
   const currentPage = parseInt(page) || 1;
 
