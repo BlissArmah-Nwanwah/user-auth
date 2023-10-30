@@ -82,11 +82,11 @@ const getQuizQuestions = async (req, res) => {
 
    
 const totalMarks = async (req, res) => {
-  const { allAnswer } = req.body;
+  const { _id, answers } = req.body;
   try {
-    const questions = await Quiz.findOne({ _id: allAnswer._id });
+    const questions = await Quiz.findOne({ _id: _id });
     let totalMarks = 0;
-    for (const submittedAnswer of allAnswer.answers) {
+    for (const submittedAnswer of answers) {
       const question = questions?.questions.find(
         (q) => q._id.toString() === submittedAnswer._id
       );
