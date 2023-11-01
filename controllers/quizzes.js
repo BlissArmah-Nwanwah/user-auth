@@ -95,7 +95,7 @@ const getQuizQuestion = async (req, res) => {
 
     const questions = quiz.questions
 
-    res.status(StatusCodes.OK).json({ questions });
+    res.status(StatusCodes.OK).json({ quiz });
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
