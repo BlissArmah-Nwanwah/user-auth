@@ -85,7 +85,7 @@ const getQuizQuestion = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const quiz = await Quiz.findOne({ _id: id }).select("-rating -__v");
+    const quiz = await Quiz.findOne({ _id: id }).select("-rating -__v -subject -level -title -duration");
 
     if (!quiz) {
       return res
@@ -93,7 +93,9 @@ const getQuizQuestion = async (req, res) => {
         .json({ msg: `No quiz with _id: ${id}` });
     }
 
-    res.status(StatusCodes.OK).json({ quiz });
+    const questions = quiz.questions
+
+    res.status(StatusCodes.OK).json({ questions });
   } catch (error) {
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
