@@ -29,7 +29,7 @@ const getAllQuizzes = async (req, res) => {
     result = Quiz.find(queryObject).select("-correctAnswer");
   }
   const quiz = await result;
-  if (!quiz) { 
+  if (!quiz) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .json({ msg: `No quiz with  : ${subject}` });
@@ -39,7 +39,7 @@ const getAllQuizzes = async (req, res) => {
 
 const getQuizQuestions = async (req, res) => {
   const { id } = req.params;
-  const {page} = req.query
+  const { page } = req.query;
   const questionsPerPage = 1; // Number of questions per page
   const currentPage = parseInt(page) || 1;
 
@@ -73,14 +73,34 @@ const getQuizQuestions = async (req, res) => {
       totalPages,
     };
 
-    res.status(StatusCodes.OK).json({questions, pagination });
+    res.status(StatusCodes.OK).json({ questions, pagination });
   } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 
+const getQuizQuestion = async (req, res) => {
+  const { id } = req.params;
 
-   
+  try {
+    const quiz = await Quiz.findOne({ _id: id }).select("-rating -__v");
+
+    if (!quiz) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ msg: `No quiz with _id: ${id}` });
+    }
+
+    res.status(StatusCodes.OK).json({ quiz });
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
+
 const totalMarks = async (req, res) => {
   const { _id, answers } = req.body;
   try {
@@ -101,4 +121,4 @@ const totalMarks = async (req, res) => {
   }
 };
 
-module.exports = { getAllQuizzes, createQuiz, totalMarks,getQuizQuestions };
+module.exports = { getAllQuizzes, createQuiz, totalMarks, getQuizQuestions,getQuizQuestion };

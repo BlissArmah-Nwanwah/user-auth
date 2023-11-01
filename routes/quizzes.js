@@ -6,11 +6,13 @@ const authenticateUser = require("../middleware/authentication");
 const {
   getAllQuizzes,
   createQuiz,totalMarks,
-  getQuizQuestions
+  getQuizQuestions,
+  getQuizQuestion
 } = require("../controllers/quizzes");
 
 router.get("/", getAllQuizzes);
 router.get("/questions/:id", getQuizQuestions);
+router.get("/question/:id", getQuizQuestion);
 router.post("/createquiz", createQuiz);
 router.post("/totalMarks", totalMarks);
 
