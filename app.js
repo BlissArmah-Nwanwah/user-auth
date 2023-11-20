@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("user auth");
 });
 
-const webSocket = require("ws");
+const webSocket = require("ws"); 
 const server = require("http").createServer(app);
 const wss = new webSocket.Server({ server: server });
 wss.on("connection", function connection(ws) {
@@ -52,9 +52,7 @@ wss.on("connection", function connection(ws) {
     }
   });
   ws.send('something');
-
 });
-
 
 
 app.use("/api/v1/user", user);

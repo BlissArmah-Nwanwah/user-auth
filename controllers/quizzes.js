@@ -106,21 +106,40 @@ const getQuizQuestion = async (req, res) => {
 const totalMarks = async (req, res) => {
   const { _id, answers } = req.body;
   try {
-    const questions = await Quiz.findOne({ _id: _id });
+    const quiz = await Quiz.findOne({ _id: _id });
     let totalMarks = 0;
+    const result = [];
+
     for (const submittedAnswer of answers) {
-      const question = questions?.questions.find(
+      const question = quiz?.questions.find(
         (q) => q._id.toString() === submittedAnswer._id
       );
 
+      let isCorrect = false;
+
       if (question && question.correctAnswer === submittedAnswer.answer) {
         totalMarks++;
+        isCorrect = true;
       }
+
+      result.push({
+        _id: question._id,
+        options: question.options,
+        question: question.question,
+        answer: submittedAnswer.answer,
+        correctAnswer: question.correctAnswer,
+        isCorrect,
+      });
     }
-    return res.status(StatusCodes.OK).json({ total: totalMarks });
+
+    return res.status(StatusCodes.OK).json({
+      _id: quiz._id,
+      questions: result,
+    });
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json(error);
   }
 };
+
 
 module.exports = { getAllQuizzes, createQuiz, totalMarks, getQuizQuestions,getQuizQuestion };
