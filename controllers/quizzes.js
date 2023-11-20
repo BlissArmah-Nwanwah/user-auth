@@ -134,6 +134,7 @@ const totalMarks = async (req, res) => {
 
     return res.status(StatusCodes.OK).json({
       _id: quiz._id,
+      totalMarks,
       questions: result,
     });
   } catch (error) {
